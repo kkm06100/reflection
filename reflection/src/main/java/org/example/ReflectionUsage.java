@@ -2,7 +2,6 @@ package org.example;
 
 import org.reflections.Reflections;
 
-import java.lang.annotation.Annotation;
 import java.util.Set;
 
 public class ReflectionUsage {
