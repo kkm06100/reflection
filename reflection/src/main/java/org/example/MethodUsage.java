@@ -18,10 +18,11 @@ public class MethodUsage {
 
         // static method
         Method staticSum = personClass.getMethod("staticSum", int.class, int.class);
-        System.out.println(sum.invoke(null, 100, 100));
+        System.out.println(staticSum.invoke(null, 100, 100));
 
         //private method
         Method privateSum = personClass.getDeclaredMethod("privateSum", int.class, int.class);
+        privateSum.setAccessible(true); // allow to Access
         System.out.println(privateSum.invoke(new Person(), 100, 100));
 
     }
