@@ -1,8 +1,10 @@
 package org.example;
 
 /**
+ *
  * Class 객체 로딩 방법
  */
+@CycleComponent2
 public class ClassLoad {
     public static void main(String[] args) {
         // Object.getClass()

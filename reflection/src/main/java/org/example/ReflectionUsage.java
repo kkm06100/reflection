@@ -6,9 +6,9 @@ import org.reflections.util.ConfigurationBuilder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
-import java.util.HashSet;
 import java.util.Set;
 
+@At
 public class ReflectionUsage {
     /**
      *
@@ -22,8 +22,9 @@ public class ReflectionUsage {
                 || clazz.isEnum()
                 || Modifier.isAbstract(clazz.getModifiers());
     }
+
     public static void main(String[] args) {
-        Set<Class<? extends Annotation>> targets = Set.of(Component.class);
+        Set<Class<? extends Annotation>> targets = Set.of(Component.class, At.class);
 
         Reflections reflections = new Reflections(
                 new ConfigurationBuilder()
@@ -35,14 +36,13 @@ public class ReflectionUsage {
 
         System.out.println("Discovered classes: " + classes.size());
 
-        final Set<Class<? extends Annotation>> visited = new HashSet<>();
         for (Class<?> clazz : classes) {
             if(isNotCorrectClass(clazz)){
                 continue;
             }
             System.out.println("Found correct class: " + clazz.getName());
             for(Class<? extends Annotation> target:targets){
-                boolean hasAnnotation = AnnotationDetector.hasAnnotation(clazz, target, visited);
+                boolean hasAnnotation = AnnotationDetector.hasAnnotation(clazz, target);
                 System.out.println(clazz.getName() + ((hasAnnotation) ? " has " : " hasn't ") + target.getName());
             }
         }
