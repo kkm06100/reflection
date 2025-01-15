@@ -9,8 +9,7 @@ public class AnnotationDetector {
     /**
      * 지정한 어노테이션이 존재하는지 확인해주는 메소드
      */
-    public static boolean hasAnnotation(AnnotatedElement element, Class<? extends Annotation> targetAnnotation){
-        final Set<Class<? extends Annotation>> visited = new HashSet<>();
+    public static boolean hasAnnotation(AnnotatedElement element, Class<? extends Annotation> targetAnnotation, Set<Class<? extends Annotation>> visited){
         for (Annotation annotation : element.getAnnotations()) {
             if (isAnnotationPresent(annotation.annotationType(), targetAnnotation, visited)) {
                 return true;
@@ -25,6 +24,7 @@ public class AnnotationDetector {
     private static boolean isAnnotationPresent(Class<? extends Annotation> annotationType, Class<? extends Annotation> targetAnnotation, Set<Class<? extends Annotation>> visited){
         visited.add(annotationType);
         if(annotationType.equals(targetAnnotation)){
+            visited.remove(annotationType); // fixed
             return true;
         }
         for(Annotation metaAnnotation : annotationType.getAnnotations()){
@@ -38,15 +38,16 @@ public class AnnotationDetector {
     }
 
     public static void main(String[] args) {
+        final Set<Class<? extends Annotation>> visited = new HashSet<>();
         // @CustomComponent -> @Component
-        if(hasAnnotation(TestService.class, Component.class)){
+        if(hasAnnotation(TestService.class, Component.class, visited)){
             System.out.println(TestService.class.getName() + " including @Component");
         }else{
             System.out.println(TestService.class.getName() + " not including @Component");
         }
 
         // @Component X
-        if(hasAnnotation(FieldUsage.class, Component.class)){
+        if(hasAnnotation(FieldUsage.class, Component.class, visited)){
             System.out.println(FieldUsage.class.getName() + " including @Component");
         }else{
             System.out.println(FieldUsage.class.getName() + " not including @Component");
@@ -54,7 +55,7 @@ public class AnnotationDetector {
 
         // @Annotation Cycle
         // non-stack overflow code
-        if(hasAnnotation(CycleComponent2.class, Component.class)){
+        if(hasAnnotation(CycleComponent2.class, Component.class, visited)){
             System.out.println(CycleComponent2.class.getName() + " including @Component");
         }else{
             System.out.println(CycleComponent2.class.getName() + " not including @Component");
