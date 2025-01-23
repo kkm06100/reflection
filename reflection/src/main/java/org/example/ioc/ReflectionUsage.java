@@ -1,5 +1,8 @@
-package org.example;
+package org.example.ioc;
 
+import org.example.At;
+import org.example.Component;
+import org.example.ioc.AnnotationDetector;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ConfigurationBuilder;
@@ -11,7 +14,6 @@ import java.util.Set;
 @At
 public class ReflectionUsage {
     /**
-     *
      * @param clazz
      * @return is not class(boolean)
      */
@@ -23,6 +25,23 @@ public class ReflectionUsage {
                 || Modifier.isAbstract(clazz.getModifiers());
     }
 
+    public static void IoCProcessor(){
+        Reflections reflection = new Reflections(
+                new ConfigurationBuilder()
+                        .forPackages("org.example")
+                        .addScanners(new SubTypesScanner(false))
+        );
+
+        Set<Class<?>> classes = reflection.getSubTypesOf(Object.class);
+
+        for(Class<?> clazz : classes){
+            if(isNotCorrectClass(clazz)){
+                continue;
+            }
+            boolean hasAnnotation = AnnotationDetector.hasAnnotation(clazz, Component.class);
+
+        }
+    }
     public static void main(String[] args) {
         Set<Class<? extends Annotation>> targets = Set.of(Component.class, At.class);
 

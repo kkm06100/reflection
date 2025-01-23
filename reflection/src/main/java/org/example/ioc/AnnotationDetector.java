@@ -1,4 +1,6 @@
-package org.example;
+package org.example.ioc;
+
+import org.example.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
